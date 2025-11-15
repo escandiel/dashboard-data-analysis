@@ -65,7 +65,6 @@ export function paymentBreakdown(sales: Sale[]) {
 }
 
 export function ticketHistogram(sales: Sale[]) {
-  // buckets em R$
   const buckets = [
     { label: "0–200", min: 0, max: 200 },
     { label: "200–400", min: 200, max: 400 },

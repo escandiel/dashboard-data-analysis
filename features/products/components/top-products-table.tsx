@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Product } from "@/features/products/types/product-model";
+import type { Product } from "@/types/product";
 import { topProductsByStockValue } from "@/lib/analytics";
 import currency from "@/helpers/money";
 

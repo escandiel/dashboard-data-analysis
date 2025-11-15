@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { Sale } from "@/features/sales/types/sales";
+import type { Sale } from "@/types/sale";
 import { ticketHistogram } from "@/lib/analytics";
 
 interface TicketDistributionChartProps {
