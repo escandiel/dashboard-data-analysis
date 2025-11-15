@@ -11,6 +11,10 @@ import { TicketDistributionChart } from "@/features/dashboard/components/ticket-
 import { TopProductsTable } from "@/features/products/components/top-products-table";
 import { SalesFilters } from "@/features/sales/components/sales-filter";
 
+import { DescriptiveStatsCard } from "./descriptive-stats";
+import { WeekdayRevenueChart } from "./weekday-revenue";
+import { ItemsPerSaleChart } from "./items-per-sale";
+
 export type Range = "7d" | "30d" | "90d" | "all";
 
 interface DashboardContentProps {
@@ -73,12 +77,20 @@ export function DashboardContent({
 
       <SalesSummaryCards sales={filteredSales} />
 
+      {/* Linha 1 – tendência + composição de vendas */}
       <div className="grid gap-4 md:grid-cols-3">
         <RevenueOverTimeChart sales={filteredSales} />
         <div className="flex flex-col gap-4">
           <PaymentMethodsChart sales={filteredSales} />
           <TicketDistributionChart sales={filteredSales} />
         </div>
+      </div>
+
+      {/* Linha 2 – análise quantitativa pesada */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <DescriptiveStatsCard sales={filteredSales} />
+        <WeekdayRevenueChart sales={filteredSales} />
+        <ItemsPerSaleChart sales={filteredSales} />
       </div>
 
       <TopProductsTable products={products} />

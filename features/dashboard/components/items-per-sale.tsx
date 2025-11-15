@@ -15,46 +15,54 @@ import {
   YAxis,
 } from "recharts";
 import type { Sale } from "@/types/sale";
-import { ticketHistogram } from "@/lib/analytics";
 
-interface TicketDistributionChartProps {
+interface ItemsPerSaleChartProps {
   sales: Sale[];
 }
 
-export function TicketDistributionChart({
-  sales,
-}: TicketDistributionChartProps) {
-  const data = ticketHistogram(sales);
+export function ItemsPerSaleChart({ sales }: ItemsPerSaleChartProps) {
+  const map = new Map<number, number>();
+
+  sales.forEach((s) => {
+    const key = s.items || 0;
+    map.set(key, (map.get(key) ?? 0) + 1);
+  });
+
+  const data = Array.from(map.entries())
+    .sort((a, b) => a[0] - b[0])
+    .map(([items, count]) => ({ items, count }));
+
   const hasData = data.length > 0;
 
   return (
-    <Card className="h-full">
+    <Card>
       <CardHeader>
-        <CardTitle className="text-base">Distribuição de tickets</CardTitle>
+        <CardTitle className="text-base">Itens por venda</CardTitle>
         <p className="text-xs text-muted-foreground">
-          Quantidade de vendas por faixa de valor (histograma).
+          Distribuição da quantidade de itens por venda.
         </p>
       </CardHeader>
-      <CardContent className="h-full">
+      <CardContent>
         {!hasData ? (
-          <div className="flex h-72 items-center justify-center text-xs text-muted-foreground">
-            Sem vendas suficientes para montar o histograma.
+          <div className="flex h-64 items-center justify-center text-xs text-muted-foreground">
+            Sem vendas para analisar a distribuição de itens.
           </div>
         ) : (
           <ChartContainer
             config={{
-              count: { label: "Vendas", color: "hsl(var(--chart-3))" },
+              count: { label: "Vendas", color: "hsl(var(--chart-4))" },
             }}
-            className="h-[90%] w-[98%]"
+            className="h-64"
           >
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis
-                  dataKey="label"
+                  dataKey="items"
                   tickLine={false}
                   axisLine={false}
                   fontSize={11}
+                  tickFormatter={(v) => `${v} itens`}
                 />
                 <YAxis
                   allowDecimals={false}
@@ -66,10 +74,10 @@ export function TicketDistributionChart({
                 <ChartTooltip
                   content={
                     <ChartTooltipContent
-                      formatter={(value, _name, props) => {
-                        const range = (props?.payload as any)?.label;
-                        return [`${value} venda(s)`, `Faixa ${range ?? ""}`];
-                      }}
+                      formatter={(value, _name, props) => [
+                        `${value} venda(s)`,
+                        `${(props?.payload as any)?.items} item(ns)`,
+                      ]}
                     />
                   }
                 />
